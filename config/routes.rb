@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  #
-  root 'home#index'
 
   # sign up as a new user
   post '/users', to: 'users#create'
@@ -105,24 +103,24 @@ Rails.application.routes.draw do
   # create new test
   post '/tests', to: 'tests#create'
 
-  # get correct answers
-  get '/tests/:test_id/answers', to: 'answers#index'
+  # get all correct answers of test
+  get '/tests/:test_id/test_answers', to: 'test_answers#index'
 
   # =========================
 
-  # get test info
+  # get test data
   get '/tests/:test_id', to: 'tests#show'
 
-  # get test questions
-  get '/tests/:test_id/test_questions', to: 'questions#index'
+  # get all questions of test
+  get '/tests/:test_id/test_questions', to: 'test_questions#index'
 
   # send user answers to server
-  post '/tests/:test_id/test_answers', to: 'answers#create'
+  post '/tests/:test_id/test_user_answers', to: 'test_user_answers#create'
 
   # get user answers
-  get '/tests/:test_id/user_answers', to: 'answers#index'
+  get '/tests/:test_id/user_user_answers', to: 'test_user_answers#index'
 
   # get user test result
-  get '/tests/:test_id/test_result', to: 'result#index'
+  get '/tests/:test_id/test_result', to: 'test_result#index'
 
 end
