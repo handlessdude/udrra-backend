@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  track_name: MyString
+  preview_text: MyText
+  preview_picture: MyString
+  published: false
+  mode: MyString
+
+two:
+  track_name: MyString
+  preview_text: MyText
+  preview_picture: MyString
+  published: false
+  mode: MyString
