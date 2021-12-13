@@ -6,7 +6,7 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.string :first_name, null: false
       t.string :second_name, null: false
       t.string :avatar_url
-
+      t.references :faculty, null: false
       t.timestamps
     end
   end

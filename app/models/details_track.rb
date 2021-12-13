@@ -1,0 +1,2 @@
+class DetailsTrack < ApplicationRecord
+end

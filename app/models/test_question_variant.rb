@@ -1,0 +1,2 @@
+class TestQuestionVariant < ApplicationRecord
+end
