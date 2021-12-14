@@ -3,6 +3,13 @@ class User < ApplicationRecord
                         :encrypted_password,
                         :first_name,
                         :second_name
-  has_and_belongs_to_many :notifications
+  validates_uniqueness_of :login
+
+  has_many :notifications_users
+  has_many :notifications, through: :notifications_users
+
+  has_many :tracks_users
+  has_many :tracks, through: :tracks_users
+
   belongs_to :faculty
 end

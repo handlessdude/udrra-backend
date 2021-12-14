@@ -10,19 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_13_204812) do
+ActiveRecord::Schema.define(version: 2021_12_14_102712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "courses", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "duration", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "details", force: :cascade do |t|
     t.string "type", null: false
     t.string "entity_name", null: false
     t.string "entity_duration", null: false
+    t.string "entity_type", null: false
     t.bigint "entity_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["entity_id"], name: "index_details_on_entity_id"
+    t.index ["entity_type", "entity_id"], name: "index_details_on_entity"
   end
 
   create_table "details_tracks", force: :cascade do |t|
@@ -83,17 +91,6 @@ ActiveRecord::Schema.define(version: 2021_12_13_204812) do
     t.index ["test_question_id"], name: "index_test_answer_results_on_test_question_id"
   end
 
-  create_table "test_answers", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "test_question_id", null: false
-    t.bigint "test_question_variant_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["test_question_id"], name: "index_test_answers_on_test_question_id"
-    t.index ["test_question_variant_id"], name: "index_test_answers_on_test_question_variant_id"
-    t.index ["user_id"], name: "index_test_answers_on_user_id"
-  end
-
   create_table "test_correct_answers", force: :cascade do |t|
     t.bigint "test_question_id", null: false
     t.bigint "test_question_variant_id", null: false
@@ -120,6 +117,17 @@ ActiveRecord::Schema.define(version: 2021_12_13_204812) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["test_id"], name: "index_test_questions_on_test_id"
+  end
+
+  create_table "test_user_answers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "test_question_id", null: false
+    t.bigint "test_question_variant_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["test_question_id"], name: "index_test_user_answers_on_test_question_id"
+    t.index ["test_question_variant_id"], name: "index_test_user_answers_on_test_question_variant_id"
+    t.index ["user_id"], name: "index_test_user_answers_on_user_id"
   end
 
   create_table "tests", force: :cascade do |t|

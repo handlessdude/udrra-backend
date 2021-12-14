@@ -4,7 +4,8 @@ class CreateDetails < ActiveRecord::Migration[6.1]
       t.string :type, null: false
       t.string :entity_name, null: false
       t.string :entity_duration, null: false
-      t.references :entity, null: false
+      t.references :entity,
+                   null: false, polymorphic: true
       t.timestamps
     end
   end

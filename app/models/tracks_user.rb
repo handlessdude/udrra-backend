@@ -1,8 +1,9 @@
 class TracksUser < ApplicationRecord
-  validates_presence_of :user_id,
-                        :track_id,
+  belongs_to :track
+  belongs_to :user
+
+  validates_presence_of :track,
+                        :user,
                         :status,
                         :finished
-  has_one :track
-  has_one :user
 end

@@ -1,5 +1,7 @@
 class Notification < ApplicationRecord
-  validates_presence_of :text
-  has_and_belongs_to_many :notifications_users
-  has_and_belongs_to_many :users
+  validates_presence_of :text,
+                        :created_at
+
+  has_many :notifications_users
+  has_many :users, through: :notifications_users
 end

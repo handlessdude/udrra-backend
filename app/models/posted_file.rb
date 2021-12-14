@@ -1,5 +1,7 @@
 class PostedFile < ApplicationRecord
   validates_presence_of :type,
                         :url
-  belongs_to :detail, as: :entity
+  validates_uniqueness_of :url
+
+  has_many :detail, as: :entity
 end

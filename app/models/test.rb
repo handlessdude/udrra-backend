@@ -4,5 +4,7 @@ class Test < ApplicationRecord
                         :instruction,
                         :duration,
                         :img
-  belongs_to :detail, as: :entity
+  has_one :detail, as: :entity
+  has_many :test_questions
+  has_many :test_answer_results
 end
