@@ -4,6 +4,7 @@ class Track < ApplicationRecord
                         :preview_picture,
                         :mode,
                         :published
+
   validates_uniqueness_of :track_name
 
   has_many :tracks_user, dependent: :destroy

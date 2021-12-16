@@ -12,6 +12,7 @@ class Api::V1::TracksController < ApplicationController
     end
 
     render json: @tracks.reverse
+    # render json: @tracks.sort_by(&:id) # to get all tracks sorted by id
   end
 
   # GET /tracks/1
