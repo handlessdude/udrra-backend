@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_14_102712) do
+ActiveRecord::Schema.define(version: 2021_12_16_083952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
   end
 
   create_table "details", force: :cascade do |t|
-    t.string "type", null: false
+    t.string "detail_type", null: false
     t.string "entity_name", null: false
     t.string "entity_duration", null: false
     t.string "entity_type", null: false
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
   create_table "notifications_users", force: :cascade do |t|
     t.bigint "notification_id", null: false
     t.bigint "user_id", null: false
-    t.boolean "looked", default: false
+    t.boolean "looked", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["notification_id"], name: "index_notifications_users_on_notification_id"
@@ -73,10 +73,20 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
   end
 
   create_table "posted_files", force: :cascade do |t|
-    t.string "type", null: false
+    t.string "file_type", null: false
     t.string "url", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "test_question_answers", force: :cascade do |t|
+    t.bigint "test_question_id", null: false
+    t.bigint "test_question_variant_id", null: false
+    t.boolean "is_correct", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["test_question_id"], name: "index_test_question_answers_on_test_question_id"
+    t.index ["test_question_variant_id"], name: "index_test_question_answers_on_test_question_variant_id"
   end
 
   create_table "test_question_variants", force: :cascade do |t|
@@ -87,7 +97,7 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
 
   create_table "test_questions", force: :cascade do |t|
     t.bigint "test_id", null: false
-    t.string "type", null: false
+    t.string "question_type", null: false
     t.string "name", null: false
     t.text "description", null: false
     t.string "img", null: false
@@ -131,7 +141,7 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
     t.bigint "track_id", null: false
     t.bigint "user_id", null: false
     t.string "status", null: false
-    t.boolean "finished", default: false
+    t.boolean "finished", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["track_id"], name: "index_tracks_users_on_track_id"

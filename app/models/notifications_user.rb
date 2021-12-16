@@ -1,8 +1,7 @@
 class NotificationsUser < ApplicationRecord
+  validates_presence_of :notification,
+                        :user
+
   belongs_to :notification
   belongs_to :user
-
-  validates_presence_of :looked,
-                        :notification,
-                        :user
 end

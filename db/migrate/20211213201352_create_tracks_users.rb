@@ -4,7 +4,7 @@ class CreateTracksUsers < ActiveRecord::Migration[6.1]
       t.references :track, null: false
       t.references :user, null: false
       t.string :status, null: false
-      t.boolean :finished, default: false
+      t.boolean :finished, null: false ,default: false
       t.timestamps
     end
   end
