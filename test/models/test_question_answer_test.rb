@@ -1,6 +1,6 @@
 require "test_helper"
 
-class TestAnswerResultTest < ActiveSupport::TestCase
+class TestQuestionAnswerTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

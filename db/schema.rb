@@ -79,33 +79,10 @@ ActiveRecord::Schema.define(version: 2021_12_14_102712) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "test_answer_results", force: :cascade do |t|
-    t.bigint "test_question_id", null: false
-    t.bigint "test_answer_id", null: false
-    t.bigint "test_id", null: false
-    t.boolean "is_correct", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["test_answer_id"], name: "index_test_answer_results_on_test_answer_id"
-    t.index ["test_id"], name: "index_test_answer_results_on_test_id"
-    t.index ["test_question_id"], name: "index_test_answer_results_on_test_question_id"
-  end
-
-  create_table "test_correct_answers", force: :cascade do |t|
-    t.bigint "test_question_id", null: false
-    t.bigint "test_question_variant_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["test_question_id"], name: "index_test_correct_answers_on_test_question_id"
-    t.index ["test_question_variant_id"], name: "index_test_correct_answers_on_test_question_variant_id"
-  end
-
   create_table "test_question_variants", force: :cascade do |t|
-    t.bigint "test_question_id", null: false
     t.string "title", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["test_question_id"], name: "index_test_question_variants_on_test_question_id"
   end
 
   create_table "test_questions", force: :cascade do |t|
