@@ -3,9 +3,10 @@ class User < ApplicationRecord
                         :email,
                         :password_digest,
                         :first_name,
-                        :second_name
+                        :second_name,
+                        :auth_token
 
-  validates_uniqueness_of :login, :email
+  validates_uniqueness_of :login, :email, :auth_token
 
   has_many :notifications_users, dependent: :destroy
   has_many :notifications, through: :notifications_users
@@ -16,5 +17,8 @@ class User < ApplicationRecord
   has_many :test_user_answers, dependent: :destroy
 
   belongs_to :faculty, optional: true
+
+  has_and_belongs_to_many :roles
+  before_destroy { roles.clear }
 
 end

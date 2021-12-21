@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_16_083952) do
+ActiveRecord::Schema.define(version: 2021_12_21_154330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,19 @@ ActiveRecord::Schema.define(version: 2021_12_16_083952) do
     t.string "url", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "role_name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "roles_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "role_id", null: false
+    t.index ["role_id"], name: "index_roles_users_on_role_id"
+    t.index ["user_id"], name: "index_roles_users_on_user_id"
   end
 
   create_table "test_question_answers", force: :cascade do |t|
@@ -158,6 +171,8 @@ ActiveRecord::Schema.define(version: 2021_12_16_083952) do
     t.bigint "faculty_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "auth_token"
+    t.index ["auth_token"], name: "index_users_on_auth_token", unique: true
     t.index ["faculty_id"], name: "index_users_on_faculty_id"
   end
 
