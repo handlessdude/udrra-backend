@@ -172,7 +172,8 @@ ActiveRecord::Schema.define(version: 2021_12_21_154330) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "auth_token"
-    t.index ["auth_token"], name: "index_users_on_auth_token", unique: true
+    t.date "auth_token_date"
+    t.index ["auth_token"], name: "index_users_on_auth_token"
     t.index ["faculty_id"], name: "index_users_on_faculty_id"
   end
 
