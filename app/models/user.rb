@@ -3,10 +3,9 @@ class User < ApplicationRecord
                         :email,
                         :password_digest,
                         :first_name,
-                        :second_name,
-                        :auth_token
+                        :second_name
 
-  validates_uniqueness_of :login, :email, :auth_token
+  validates_uniqueness_of :login, :email
 
   has_many :notifications_users, dependent: :destroy
   has_many :notifications, through: :notifications_users
