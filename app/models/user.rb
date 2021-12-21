@@ -1,10 +1,11 @@
 class User < ApplicationRecord
   validates_presence_of :login,
-                        :encrypted_password,
+                        :email,
+                        :password_digest,
                         :first_name,
-                        :second_name,
-                        :faculty
-  validates_uniqueness_of :login
+                        :second_name
+
+  validates_uniqueness_of :login, :email
 
   has_many :notifications_users, dependent: :destroy
   has_many :notifications, through: :notifications_users
@@ -14,6 +15,6 @@ class User < ApplicationRecord
 
   has_many :test_user_answers, dependent: :destroy
 
-  belongs_to :faculty
+  belongs_to :faculty, optional: true
 
 end
