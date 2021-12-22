@@ -1,90 +1,194 @@
 class Api::V1::TrackDetailsController < ApplicationController
   before_action :create_answer_template
-  #before_action :set_track_detail, only: [:update, :destroy, :show]
 
   # POST /tracks/:track_id/details
   def create
     return unless set_user
     return unless check_if_signed_in
     return unless check_access_rights
-    @track = Track.find_by(id: params[:track_id])
-    if @track.nil?
-      @answer[:message] = "Could not find the track"
-      render json: @answer, status: :not_found
-      return false
-    end
-    parameters = track_detail_params
-    if parameters[:detail_type] == "event"
-      @entity = Event.new(name: parameters[:entity_name])
-    elsif parameters[:detail_type] == "course"
-      @entity = Course.new(name: parameters[:entity_name], duration: parameters[:entity_duration])
+    
+    det_params = detail_params
+    detail_type = det_params[:detail_type]
+    if detail_type == "event"
+      ps = event_params
+      @entity = Event.new(name: ps[:entity_name], duration: ps[:entity_duration])
+    elsif detail_type == "course"
+      ps = course_params
+      @entity = Course.new(name: ps[:entity_name], duration: ps[:entity_duration])
+    elsif detail_type == "file"
+      ps = file_params
+      @entity = PostedFile.new(file_type: ps[:file_type], url: ps[:url])
     else
       @answer[:message] = "Wrong detail type"
       render json: @answer, status: :unprocessable_entity
       return
     end
-    parameters[:entity_id] = @entity.id
-    @detail = Detail.new(parameters)
-    @entity.details << @detail
-    @track.details << @detail
-    @detail = Detail.create(track_detail_params)
-    @track_detail = DetailsTrack.create(detail_id: detail.id, track_id: params[entity_duration])
 
-    unless @track_detail.save
-      render json: @track_detail.errors, status: :unprocessable_entity
+    unless @entity.save
+      @answer[:message] = "Could not save new entity"
+      render json: @answer, status: :unprocessable_entity
       return
     end
 
-    if @detail.save
-      render json: @detail, status: :created, location: @detail
+    @detail = Detail.new(detail_type: detail_type, entity_name: ps[:entity_name], entity: @entity)
+    unless @detail.save
+      @answer[:message] = "Could not save new detail based on existing entity"
+      render json: @answer, status: :unprocessable_entity
+      return
+    end
+
+    @detail_track = DetailsTrack.new(track_id: params[:track_id], detail_id: @detail.id, finished: det_params[:finished], assigned: det_params[:assigned])
+    if @detail_track.save
+      @answer[:success] = true
+      @answer[:message] = "New track detail (id=#{@detail.id}) is successfully created"
+      render json: @answer, status: :created
     else
-      render json: @detail.errors, status: :unprocessable_entity
+      @answer[:message] = "Could not save new track detail"
+      render json: @answer, status: :unprocessable_entity
+      return
     end
   end
 
   # PUT /tracks/details/:track_detail_id
   def update
-    if @detail.update(track_detail_params)
-      render json: @detail
+    return unless set_user
+    return unless check_if_signed_in
+    return unless check_access_rights
+
+    @detail = Detail.find_by(id: params[:track_detail_id])
+    if @detail.nil?
+      @answer[:message] = "Could not find track detail"
+      render json: @answer, status: :not_found
+      return
+    end
+
+    det_params = detail_params
+    detail_type = det_params[:detail_type]
+    if detail_type == "event"
+      ps = event_params
+      @detail.entity.update(name: ps[:entity_name], duration: ps[:entity_duration])
+    elsif detail_type == "course"
+      ps = course_params
+      @detail.entity.update(name: ps[:entity_name], duration: ps[:entity_duration])
+    elsif detail_type == "file"
+      ps = file_params
+      @detail.entity.update(file_type: ps[:file_type], url: ps[:url])
     else
-      render json: @detail.errors, status: :unprocessable_entity
+      @answer[:message] = "Wrong detail type"
+      render json: @answer, status: :unprocessable_entity
+      return
+    end
+    @detail.update(entity_name: ps[:entity_name])
+
+    unless @detail.save
+      @answer[:message] = "Could not save updated detail"
+      render json: @answer, status: :unprocessable_entity
+      return
+    end
+
+    track_id = params.require(:data).permit(:track_id)[:track_id]
+    @detail_track = DetailsTrack.find_by(track_id: track_id, detail_id: params[:track_detail_id])
+    if @detail_track.nil?
+      @answer[:message] = "Could not find connection for these detail and track"
+      render json: @answer, status: :unprocessable_entity
+      return
+    end
+    @detail_track.update(finished: det_params[:finished], assigned: det_params[:assigned])
+    if @detail_track.save
+      @answer[:success] = true
+      @answer[:message] = "Track detail is successfully updated"
+      render json: @answer, status: :ok
+    else
+      @answer[:message] = "Could not save updated track detail"
+      render json: @answer, status: :unprocessable_entity
     end
   end
 
   # DELETE /tracks/details/:track_detail_id
   def destroy
-    @detail.destroy
+    return unless set_user
+    return unless check_if_signed_in
+    return unless check_access_rights
+
+    @detail = Detail.find_by(id: params[:track_detail_id])
+    if @detail.nil?
+      @answer[:message] = "Could not find track detail"
+      render json: @answer, status: :not_found
+      return
+    end
+
+    track_id = params.require(:data).permit(:track_id)[:track_id]
+    @detail_track = DetailsTrack.find_by(track_id: track_id, detail_id: params[:track_detail_id])
+    if @detail_track.nil?
+      @answer[:message] = "Could not find connection for these detail and track"
+      render json: @answer, status: :unprocessable_entity
+      return
+    end
+
+    if @detail_track.destroy
+      @answer[:success] = true
+      @answer[:message] = "Track detail was successfully deleted"
+      render json: @answer, status: :ok
+    else
+      @answer[:message] = "Could not delete track detail"
+      render json: @answer, status: :unprocessable_entity
+    end
   end
 
   # GET /tracks/details/:track_detail_id
   def show
-    render json: @detail
+    return unless set_user
+    return unless check_if_signed_in
+    @detail = Detail.find_by(id: params[:track_detail_id])
+    if @detail.nil?
+      @answer[:message] = "Could not find track detail"
+      render json: @answer, status: :not_found
+      return
+    end
+    @entity = @detail.entity
+    @answer[:success] = true
+    @answer[:message] = "Track detail is successfully shown"
+    h = { detail_type: @detail.detail_type, entity_name: @detail.entity_name, entity: @entity }
+    @answer[:data] = h
+    render json: @answer, status: :ok
   end
 
   # GET /tracks/:track_id/details
   def index
-    @details = Track.find(params[:track_id]).details
+    return unless set_user
+    return unless check_if_signed_in
+    detail_ids = DetailsTrack.where(track_id: params[:track_id]).map { |x| x.detail_id }
+    if detail_ids.nil?
+      @answer[:message] = "No details for this track"
+      render json: @answer, status: :not_found
+      return
+    end
+    @details = Detail.all.filter { |x| detail_ids.include?(x.id) }
     offset = params[:offset]
     limit = params[:limit]
-
-    if offset.present?
-      @details = @details.drop(offset.to_i)
-    end
-
-    if limit.present?
-      @details = @details.first(limit.to_i)
-    end
-
-    render json: @details
+    @details = @details.drop(offset.to_i) if offset.present?
+    @details = @details.first(limit.to_i) if limit.present?
+    @answer[:success] = true
+    @answer[:message] = "Track details are successfully shown"
+    @answer[:data] = @details
+    render json: @answer, status: :ok
   end
 
   private
-  def set_track_detail
-    @detail = Detail.find(params[:track_detail_id])
+  def detail_params
+    params.require(:data).permit(:detail_type, :finished, :assigned)
   end
 
-  def track_detail_params
-    params.require(:data).permit(:detail_type, :entity_name, :entity_duration)
+  def file_params
+    params.require(:data).permit(:entity_name, :file_type, :url)
+  end
+
+  def course_params
+    params.require(:data).permit(:entity_name, :entity_duration)
+  end
+
+  def event_params
+    params.require(:data).permit(:entity_name, :entity_duration)
   end
 
   def check_access_rights
@@ -136,15 +240,6 @@ class Api::V1::TrackDetailsController < ApplicationController
   def user_params
     params.permit(:userID)
   end
-
-  def track_assigns_params_to_create
-    params.require(:data).permit(:user_id, :status, :finished)
-  end
-
-  def track_assigns_params_to_destroy
-    params.require(:data).permit(:user_id)
-  end
-
 
   def create_answer_template
     @answer = { success: false, message: "" }
