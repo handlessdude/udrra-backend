@@ -6,7 +6,7 @@ class Api::V1::TrackDetailsController < ApplicationController
     return unless set_user
     return unless check_if_signed_in
     return unless check_access_rights
-    
+
     det_params = detail_params
     detail_type = det_params[:detail_type]
     if detail_type == "event"
