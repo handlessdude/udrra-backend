@@ -1,7 +1,6 @@
 class Detail < ApplicationRecord
   validates_presence_of :detail_type,
                         :entity_name,
-                        :entity_duration,
                         :entity
   belongs_to :entity, polymorphic: true
 

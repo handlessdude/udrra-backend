@@ -92,28 +92,27 @@ end
 
 unless Course.any?
   Course.create!(name: "Самый лучший курс",
-                 duration: DateTime.now)
+                 duration: "1 месяц")
   Course.create!(name: "Умеренный курс",
-                 duration: DateTime.now)
+                 duration: "2 месяца")
 end
 
 unless Event.any?
-  Event.create!(name: "Хорошее имя")
-  Event.create!(name: "Тоже хорошее имя")
+  Event.create!(name: "Хорошее имя",
+                duration: "3 месяца")
+  Event.create!(name: "Тоже хорошее имя",
+                duration: "4 месяца")
 end
 
 unless Detail.any?
   Detail.create!(detail_type: "file",
                  entity_name: "name1",
-                 entity_duration: "1 month",
                  entity: PostedFile.first)
   Detail.create!(detail_type: "course",
                  entity_name: "name2",
-                 entity_duration: "2 month",
                  entity: Course.first)
   Detail.create!(detail_type: "event",
                  entity_name: "name3",
-                 entity_duration: "3 month",
                  entity: Event.first)
 end
 
