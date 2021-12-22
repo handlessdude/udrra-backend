@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       post '/users', to: 'users#create'
 
       # get current user info
-      get '/users', to: 'users#show'
+      get '/users', to: 'users#show' #+
 
       # log in
       post '/auth', to: 'auth#create'
@@ -23,21 +23,21 @@ Rails.application.routes.draw do
       # ====== SECURE AREA ======
 
       # create new track
-      post '/tracks', to: 'tracks#create'
+      post '/tracks', to: 'tracks#create' #+
 
       # edit track
-      put '/tracks/:track_id', to: 'tracks#update'
+      put '/tracks/:track_id', to: 'tracks#update' #+
 
       # delete track
-      delete 'tracks/:id', to: 'tracks#destroy'
+      delete '/tracks/:id', to: 'tracks#destroy' #+
 
       # =========================
 
       # Получение трека по id
-      get '/tracks/:id', to: 'tracks#show'
+      get '/tracks/:id', to: 'tracks#show' #+
 
       # Получение всех треков
-      get '/tracks', to: 'tracks#index'
+      get '/tracks', to: 'tracks#index' #+
 
 
       # ====== TRACK ASSIGNS ======
@@ -45,15 +45,15 @@ Rails.application.routes.draw do
       # ====== SECURE AREA ======
 
       # assign track to user
-      post '/tracks/:track_id/track_assigns', to: 'track_assigns#create'
+      post '/tracks/:track_id/track_assigns', to: 'track_assigns#create' #+
 
       # remove track assign
-      delete '/tracks/:track_id/track_assigns', to: 'track_assigns#destroy'
+      delete '/tracks/:track_id/track_assigns', to: 'track_assigns#destroy' #+
 
       # =========================
 
       # get all assigns of some track
-      get '/tracks/:track_id/track_assigns', to: 'track_assigns#index'
+      get '/tracks/:track_id/track_assigns', to: 'track_assigns#index' #+
 
       # ====== TRACK DETAILS ======
 
@@ -68,35 +68,35 @@ Rails.application.routes.draw do
       # =========================
 
       # get track detail
-      get '/tracks/details/:track_detail_id', to: 'track_details#show'
+      get '/tracks/details/:track_detail_id', to: 'track_details#show' #+
 
       # get all track details of some track
-      get '/tracks/:track_id/details', to: 'track_details#index'
+      get '/tracks/:track_id/details', to: 'track_details#index' #+
 
       # ====== NOTIFICATIONS ======
 
       # Получение всех уведомлений пользователя
-      get '/notifications/:user_id', to: 'notifications#index'
+      get '/notifications/:user_id', to: 'notifications#index' #+
 
       # Получение непрочитанных уведомлений пользователя
-      get '/notifications/:user_id/unread', to: 'notifications#index'
+      get '/notifications/:user_id/unread', to: 'notifications#index_unread' #+
 
       # Пометить все уведомления как прочитанные
-      put '/notifications/:user_id/read_all', to: 'notifications#update'
+      put '/notifications/:user_id/read_all', to: 'notifications#update' #+
 
       # ====== SEARCH ======
 
       # Поиск пользователей
-      get '/search/users', to: 'search#index'
+      get '/search/users', to: 'search#users' #+-
 
       # Поиск ивентов
-      get '/search/events', to: 'search#index'
+      get '/search/events', to: 'search#events'
 
       # Поиск курсов
-      get '/search/courses', to: 'search#index'
+      get '/search/courses', to: 'search#courses'
 
       # Поиск факультетов
-      get '/search/faculties', to: 'search#index'
+      get '/search/faculties', to: 'search#faculties'
 
       # ====== TESTS ======
 

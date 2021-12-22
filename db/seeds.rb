@@ -117,6 +117,21 @@ unless Detail.any?
                  entity: Event.first)
 end
 
+unless DetailsTrack.any?
+  DetailsTrack.create!(track_id: 1,
+                       detail_id: 1,
+                       finished: true,
+                       assigned: true)
+  DetailsTrack.create!(track_id: 1,
+                       detail_id: 2,
+                       finished: true,
+                       assigned: true)
+  DetailsTrack.create!(track_id: 2,
+                       detail_id: 3,
+                       finished: true,
+                       assigned: true)
+end
+
 unless Test.any?
   (1..2).each do |ind|
     Test.create!(name: "test_name#{ind}",
@@ -151,16 +166,16 @@ unless TestQuestionVariant.any?
   end
 end
 
-unless TestQuestionAnswer.any?
-  (1..8).each do |ind|
-    TestQuestionAnswer.create!(test_question_id: TestQuestion.find(ind).id,
-                               test_question_variant_id: (ind-1)*2 + 1,
-                               is_correct: true)
-    TestQuestionAnswer.create!(test_question_id: TestQuestion.find(ind).id,
-                               test_question_variant_id: (ind-1)*2 + 2,
-                               is_correct: false)
-  end
-end
+# unless TestQuestionAnswer.any?
+#   (1..8).each do |ind|
+#     TestQuestionAnswer.create!(test_question_id: TestQuestion.find(ind).id,
+#                                test_question_variant_id: (ind-1)*2 + 1,
+#                                is_correct: true)
+#     TestQuestionAnswer.create!(test_question_id: TestQuestion.find(ind).id,
+#                                test_question_variant_id: (ind-1)*2 + 2,
+#                                is_correct: false)
+#   end
+# end
 
 #TODO сделать Test_User_Answers
 

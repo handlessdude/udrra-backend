@@ -1,25 +1,6 @@
 class Api::V1::TracksController < ApplicationController
   before_action :set_track, only: [:show, :update, :destroy]
 
-  # GET /tracks
-  def index
-    @tracks = Track.all
-    limit = params[:_limit]
-
-    if limit.present?
-      limit = limit.to_i
-      @tracks = @tracks.last(limit)
-    end
-
-    render json: @tracks.reverse
-    # render json: @tracks.sort_by(&:id) # to get all tracks sorted by id
-  end
-
-  # GET /tracks/1
-  def show
-    render json: @track
-  end
-
   # POST /tracks
   def create
     @track = Track.new(track_params)
@@ -31,7 +12,7 @@ class Api::V1::TracksController < ApplicationController
     end
   end
 
-  # PATCH/PUT /tracks/1
+  # PUT /tracks/:id
   def update
     if @track.update(track_params)
       render json: @track
@@ -40,19 +21,43 @@ class Api::V1::TracksController < ApplicationController
     end
   end
 
-  # DELETE /tracks/1
+  # DELETE /tracks/:id
   def destroy
     @track.destroy
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_track
-      @track = Track.find(params[:id])
+  # GET /tracks/:id
+  def show
+    render json: @track
+  end
+
+  # GET /tracks
+  def index
+    @tracks = Track.all
+    offset = params[:offset]
+    limit = params[:limit]
+
+    if offset.present?
+      @tracks= @tracks.drop(offset.to_i)
     end
 
-    # Only allow a list of trusted parameters through.
+    if limit.present?
+      @tracks = @tracks.first(limit.to_i)
+    end
+
+    render json: @tracks
+  end
+
+  private
+    def set_track
+      id = params[:id]
+      if id.nil?
+        id = params[:track_id]
+      end
+      @track = Track.find(id)
+    end
+
     def track_params
-      params.require(:track).permit(:id, :track_name, :preview_text, :preview_picture, :published, :mode, :_limit)
+      params.permit(:track_name, :preview_text, :preview_picture, :published, :mode)
     end
 end
