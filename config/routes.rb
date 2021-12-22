@@ -4,16 +4,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # sign up as a new user
-      post '/users', to: 'users#create'
+      post '/users', to: 'users#create' #+
 
       # get current user info
-      get '/users', to: 'users#show' #+
+      get '/users/:id', to: 'users#show' #+
 
       # log in
-      post '/auth', to: 'auth#create'
+      post '/auth', to: 'auth#create' #+
 
       # log out
-      delete '/auth', to: 'auth#destroy'
+      delete '/auth', to: 'auth#destroy' #not used
 
       # post new file to server
       post '/files', to: 'files#create'
@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       post '/tracks', to: 'tracks#create' #+
 
       # edit track
-      put '/tracks/:track_id', to: 'tracks#update' #+
+      put '/tracks/:id', to: 'tracks#update' #+
 
       # delete track
       delete '/tracks/:id', to: 'tracks#destroy' #+

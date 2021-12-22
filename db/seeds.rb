@@ -41,7 +41,8 @@ end
 unless User.any?
   (1..4).each do |ind|
     User.create!(login: "login#{ind}",
-                encrypted_password:"pwd#{ind}",
+                password_digest:"pwd#{ind}",
+                 email: "email#{ind}",
                 first_name: "fname#{ind}",
                 second_name: "sname#{ind}",
                 avatar_url: "ava_url#{ind}",
@@ -164,6 +165,11 @@ unless TestQuestionVariant.any?
     TestQuestionVariant.create!(title: "вариант 1 для вопроса #{ind}")
     TestQuestionVariant.create!(title: "вариант 2 для вопроса #{ind}")
   end
+end
+
+unless Role.any?
+    Role.create!(role_name: "user")
+    Role.create!(role_name: "admin")
 end
 
 # unless TestQuestionAnswer.any?

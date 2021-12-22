@@ -20,4 +20,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :roles
   before_destroy { roles.clear }
 
+  has_secure_token :auth_token
+  has_secure_password
+
 end

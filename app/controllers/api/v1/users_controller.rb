@@ -1,40 +1,53 @@
 class Api::V1::UsersController < ApplicationController
-
-  # GET /users
-  def show
-    @users = User.all
-    offset = params[:offset]
-    limit = params[:limit]
-
-    if offset.present?
-      @users= @users.drop(offset.to_i)
-    end
-
-    if limit.present?
-      @users = @users.first(limit.to_i)
-    end
-
-    render json: @users
-  end
+  before_action :create_answer_template, only: [:create, :show]
 
   # POST /users
   def create
     parameters = user_params
-    pw = parameters[:password]
-    en_pw = BCrypt::Password.create(pw)
-    parameters[:encrypted_password] = parameters.delete :password
-    parameters[:encrypted_password] = en_pw
+    parameters[:password_confirmation] = parameters[:password]
     @user = User.create(parameters)
+    role = Role.find_by(role_name: "user")
+    @user.roles << role
+    # role = Role.find_by(role_name: "admin")
+    # @user.roles << role
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      @answer[:success] = true
+      @answer[:message] = "New user (id=#{@user.id}) is successfully created"
+      render json: @answer, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      @answer[:message] = "Could not save new user"
+      render json: @answer, status: :unprocessable_entity
     end
+  end
+
+  # GET /users/:id
+  def show
+    user = User.find_by(id: params[:id])
+    if user.nil?
+      @answer[:message] = "Not found user with id=#{params[:id]}"
+      render json: @answer, status: :not_found
+      return
+    end
+    @answer[:success] = true
+    @answer[:message] = "User has been successfully found"
+    @answer[:data] = slice_user(user)
+    render json: @answer, status: :ok
   end
 
   private
   def user_params
-    params.permit(:login, :password, :first_name, :second_name, :faculty)
+    params.permit(:login, :email, :first_name, :second_name, :password)
+  end
+
+  def create_answer_template
+    @answer = { success: false, message: "" }
+  end
+
+  def slice_user(user)
+    filtered_user = user.slice(:login, :first_name, :second_name, :avatar_url, :faculty_id, :created_at)
+    filtered_user[:roles] = user.roles.map { |x| x.role_name }
+    filtered_user[:id] = user.id
+    filtered_user
   end
 end
