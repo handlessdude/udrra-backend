@@ -24,7 +24,7 @@ unless Track.any?
   (1..20).each do |ind|
     Track.create!(track_name: "dummy track #{ind}",
                   preview_text: dummy_text,
-                  preview_picture: 'dummy_picture',
+                  preview_picture: dummy_pics.sample,
                   published: true,
                   mode: 'consistent')
   end

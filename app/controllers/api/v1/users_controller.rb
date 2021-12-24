@@ -8,8 +8,9 @@ class Api::V1::UsersController < ApplicationController
     @user = User.create(parameters)
     role = Role.find_by(role_name: "user")
     @user.roles << role
-    # role = Role.find_by(role_name: "admin")
-    # @user.roles << role
+    # uncomment to become admin!
+    role = Role.find_by(role_name: "admin")
+    @user.roles << role
 
     if @user.save
       @answer[:success] = true
